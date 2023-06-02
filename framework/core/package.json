@@ -1,0 +1,68 @@
+{
+  "name": "koop",
+  "description": "Serve, transform, and query geospatial data on the web",
+  "version": "5.1.1",
+  "dependencies": {
+    "@hapi/joi": "^17.1.0",
+    "logger": "^2.0.6",
+    "output-geoservices": "^3.1.6",
+    "cache-memory": "^2.0.3",
+    "localfs": "^1.1.2",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.0.0",
+    "compression": "^1.7.4",
+    "config": "^3.3.1",
+    "cors": "^2.8.5",
+    "easy-table": "^1.1.1",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "gh-release": "^3.5.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.1.7",
+    "mocha": "^7.1.2",
+    "should": "^13.2.3",
+    "should-sinon": "0.0.6",
+    "sinon": "^9.0.2",
+    "standard": "^14.3.1",
+    "supertest": "^4.0.2"
+  },
+  "keywords": [
+    "etl",
+    "feature",
+    "featureService",
+    "geojson",
+    "geospatial",
+    "koop",
+    "service",
+    "spatial"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "scripts": {
+    "clean": "shx rm -rf ../../customdata/framework/core && shx rm '*-lock.json'",
+    "build": "shx mkdir ../../customdata/framework/core && shx cp package.json ../../customdata/framework/core && shx cp -r ./lib ../../customdata/framework/core && shx cp -r ./node_modules ../../customdata/framework/core && shx cp index.js ../../customdata/framework/core",
+    "release": "gh-release",
+    "test": "standard && mocha test --recursive -t 5000"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "before",
+      "after",
+      "beforeEach",
+      "afterEach"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "standard --fix"
+  }
+}
