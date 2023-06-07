@@ -1,6 +1,7 @@
 const config = require('../config/default.json')
 const apiKey = config.dhis2.apiKey;
 let geojson = null;
+const fetch = require('node-fetch')
 
 function Model(koop) { }
 

@@ -1,5 +1,5 @@
 {
-  "name": "dhis2",
+  "name": "malariacases",
   "version": "11.1.0",
   "description": "Template for customdata provider",
   "main": "src/index.js",
