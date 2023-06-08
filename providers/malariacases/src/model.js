@@ -66,12 +66,11 @@ Model.prototype.getData = function (req, callback) {
       if (response.status == 200) {
         geojson = response.json().then(data => {
           // Now you can use your data
-          let output = convertToGeoJSON(data, offset, recordcount)
-
           if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly) {
-            output = { "count": output.features.length }
+            let output = { "count": data.rows.length }
             callback(null, output);
           } else {
+            let output = convertToGeoJSON(data, offset, recordcount)
             callback(null, output);
           }
         })
