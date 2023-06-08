@@ -56,7 +56,7 @@ Model.prototype.getData = function (req, callback) {
     if (req.query.hasOwnProperty('resultRecordCount'))
       recordcount = req.query.resultRecordCount
 
-    let pageSize = offset + recordcount
+    let pageSize = 100000
 
     //http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-01-01T01%3A00%3A00.000&endDate=2023-10-01T02%3A00%3A00.000&pageSize=100000
     let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=${pageSize}`
@@ -79,6 +79,7 @@ Model.prototype.getData = function (req, callback) {
           } else {
             let output = convertToGeoJSON(data, offset, recordcount)
             output.metadata = { 'geometryType': 'Point', 'idField': 'id' }
+            output.ttl = 600
             callback(null, output);
           }
         })
