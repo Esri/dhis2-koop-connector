@@ -16,17 +16,19 @@ Model.prototype.getData = function (req, callback) {
       "features": []
     };
 
+    console.log(input.rows[0])
     // iterate over your rows
     for (let row of input.rows) {
+
       // create a feature for each row
       let feature = {
         "type": "Feature",
         "geometry": JSON.parse(row[8]),
         "properties": {
-          "name": row[10],  // assuming the 11th element is the name
-          "oucode": row[11],  // assuming the 12th element is the oucode
-          "programstatus": row[12],  // assuming the 13th element is the programstatus
-          "eventstatus": row[13],  // assuming the 14th element is the eventstatus
+          "admin": row[11],  // assuming the 12th element is the oucode
+          "casedate": row[2],
+          "gender": row[16],  // assuming the 14th element is the eventstatus
+          "age": row[17]
         }
       };
 
@@ -42,9 +44,7 @@ Model.prototype.getData = function (req, callback) {
     const { host, id } = req.params;
 
     //Provide the routes into the data
-    let url = "http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-10-11T00%3A00%3A00.000&endDate=2023-10-11T00%3A00%3A00.000&pageSize=1000"
-    //let url = `https://dhis2-dev.aws.esri-ps.com/api/39/organisationUnits.geojson?level=${host}`
-    //let dimUrl = `https://dhis2-dev.aws.esri-ps.com/api/39/analytics.json?dimension=dx:${id}&dimension=ou:LEVEL-${host}&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`
+    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:bL4ooGhyHRQ&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&stage=pTo4uMt3xur&coordinatesOnly=true&pageSize=100000`
 
     fetch(url, {
       "headers": {
@@ -56,8 +56,6 @@ Model.prototype.getData = function (req, callback) {
         geojson = response.json().then(data => {
           // Now you can use your data
           let output = convertToGeoJSON(data)
-          //output.metadata = { name: [host, '_in_', id].join('') }
-          console.log(output)
           callback(null, output);
         })
           .catch(error => {
@@ -71,6 +69,8 @@ Model.prototype.getData = function (req, callback) {
       console.log("error in fetch", e)
       callback(e);
     });
+
+    console.log("do this same time?")
 
   } catch (error) {
     console.log(error)
