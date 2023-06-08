@@ -40,7 +40,7 @@ Model.prototype.getData = function (req, callback) {
   }
 
   try {
-    console.log("Parms", req.params)
+    console.log("Parms", req.query)
     const { host, id } = req.params;
 
     //Provide the routes into the data
@@ -56,6 +56,11 @@ Model.prototype.getData = function (req, callback) {
         geojson = response.json().then(data => {
           // Now you can use your data
           let output = convertToGeoJSON(data)
+
+          if(req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
+          {
+            output = {"count":output.features.length}
+          }
           callback(null, output);
         })
           .catch(error => {
