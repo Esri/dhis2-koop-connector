@@ -8,17 +8,19 @@ function Model(koop) { }
 // Each model should have a getData() function to fetch the geo data
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
-  function convertToGeoJSON(input) {
-    console.log(input)
+  function convertToGeoJSON(input, start, end) {
+    console.log(input, start, end)
     // define the basic structure of your GeoJSON
     let geojson = {
       "type": "FeatureCollection",
       "features": []
     };
 
-    console.log(input.rows[0])
+    let processRows = input.rows.slice(start, end)
+
+    console.log(processRows[0])
     // iterate over your rows
-    for (let row of input.rows) {
+    for (let row of processRows) {
 
       // create a feature for each row
       let feature = {
@@ -28,7 +30,8 @@ Model.prototype.getData = function (req, callback) {
           "admin": row[11],  // assuming the 12th element is the oucode
           "casedate": row[2],
           "gender": row[16],  // assuming the 14th element is the eventstatus
-          "age": row[17]
+          "status": row[13],  // assuming the 14th element is the eventstatus
+          "age": parseInt(row[17])
         }
       };
 
@@ -43,6 +46,14 @@ Model.prototype.getData = function (req, callback) {
     console.log("Parms", req.query)
     const { host, id } = req.params;
 
+    let offset = 0
+    let recordcount = 2000
+    if (req.query.hasOwnProperty('resultOffset'))
+      offset = parseInt(req.query.resultOffset)
+
+    if (req.query.hasOwnProperty('resultRecordCount'))
+      recordcount = req.query.resultRecordCount
+
     //Provide the routes into the data
     let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:bL4ooGhyHRQ&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&stage=pTo4uMt3xur&coordinatesOnly=true&pageSize=100000`
 
@@ -55,13 +66,14 @@ Model.prototype.getData = function (req, callback) {
       if (response.status == 200) {
         geojson = response.json().then(data => {
           // Now you can use your data
-          let output = convertToGeoJSON(data)
+          let output = convertToGeoJSON(data, offset, recordcount)
 
-          if(req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
-          {
-            output = {"count":output.features.length}
+          if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly) {
+            output = { "count": output.features.length }
+            callback(null, output);
+          } else {
+            callback(null, output);
           }
-          callback(null, output);
         })
           .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
