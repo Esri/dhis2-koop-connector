@@ -27,7 +27,7 @@ Model.prototype.getData = function (req, callback) {
         "type": "Feature",
         "geometry": JSON.parse(row[8]),
         "properties": {
-          "id":index,
+          "id": index,
           "admin": row[11],  // assuming the 12th element is the oucode
           "casedate": row[2],
           "gender": row[16],  // assuming the 14th element is the eventstatus
@@ -49,17 +49,20 @@ Model.prototype.getData = function (req, callback) {
 
     let offset = 0
     let recordcount = 2000
+    
     if (req.query.hasOwnProperty('resultOffset'))
       offset = parseInt(req.query.resultOffset)
-      //http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-01-01T01%3A00%3A00.000&endDate=2023-10-01T02%3A00%3A00.000&pageSize=100000
-    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=100000`
 
     if (req.query.hasOwnProperty('resultRecordCount'))
       recordcount = req.query.resultRecordCount
 
-    if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
-      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&outputType=EVENT&coordinatesOnly=true&pageSize=100000`
+    let pageSize = offset + recordcount
 
+    //http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-01-01T01%3A00%3A00.000&endDate=2023-10-01T02%3A00%3A00.000&pageSize=100000
+    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=${pageSize}`
+
+    if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
+      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&outputType=EVENT&coordinatesOnly=true&pageSize=1000000`
 
     fetch(url, {
       "headers": {
