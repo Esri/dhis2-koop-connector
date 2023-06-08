@@ -16,7 +16,7 @@ Model.prototype.getData = function (req, callback) {
       "features": []
     };
 
-    let processRows = input.rows.slice(start, end)
+    let processRows = input.rows //.slice(start, start + end)
 
     console.log(processRows[0])
     // iterate over your rows
