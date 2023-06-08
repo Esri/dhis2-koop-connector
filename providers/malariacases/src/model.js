@@ -20,13 +20,14 @@ Model.prototype.getData = function (req, callback) {
 
     console.log(processRows[0])
     // iterate over your rows
-    for (let row of processRows) {
+    for (let [index, row] of processRows.entries()) {
 
       // create a feature for each row
       let feature = {
         "type": "Feature",
         "geometry": JSON.parse(row[8]),
         "properties": {
+          "id":index,
           "admin": row[11],  // assuming the 12th element is the oucode
           "casedate": row[2],
           "gender": row[16],  // assuming the 14th element is the eventstatus
@@ -51,11 +52,14 @@ Model.prototype.getData = function (req, callback) {
     if (req.query.hasOwnProperty('resultOffset'))
       offset = parseInt(req.query.resultOffset)
 
+    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:bL4ooGhyHRQ&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=100000`
+
     if (req.query.hasOwnProperty('resultRecordCount'))
       recordcount = req.query.resultRecordCount
 
-    //Provide the routes into the data
-    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:bL4ooGhyHRQ&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&stage=pTo4uMt3xur&coordinatesOnly=true&pageSize=100000`
+    if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
+      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:bL4ooGhyHRQ&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&outputType=EVENT&coordinatesOnly=true&pageSize=100000`
+
 
     fetch(url, {
       "headers": {
@@ -71,6 +75,7 @@ Model.prototype.getData = function (req, callback) {
             callback(null, output);
           } else {
             let output = convertToGeoJSON(data, offset, recordcount)
+            output.metadata = { 'geometryType': 'Point', 'idField': 'id' }
             callback(null, output);
           }
         })
