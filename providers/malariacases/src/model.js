@@ -62,7 +62,7 @@ Model.prototype.getData = function (req, callback) {
     let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=${pageSize}`
 
     if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
-      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&outputType=EVENT&coordinatesOnly=true&pageSize=1000000`
+      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/count/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS`
 
     fetch(url, {
       "headers": {
@@ -74,7 +74,7 @@ Model.prototype.getData = function (req, callback) {
         geojson = response.json().then(data => {
           // Now you can use your data
           if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly) {
-            let output = { "count": data.rows.length }
+            let output = { "count": data.count }
             callback(null, output);
           } else {
             let output = convertToGeoJSON(data, offset, recordcount)
@@ -93,9 +93,6 @@ Model.prototype.getData = function (req, callback) {
       console.log("error in fetch", e)
       callback(e);
     });
-
-    console.log("do this same time?")
-
   } catch (error) {
     console.log(error)
   }
