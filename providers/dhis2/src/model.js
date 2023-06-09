@@ -1,4 +1,5 @@
 const config = require('../config/default.json')
+const parseGeoJSON = require('./parseGeoJson');
 const apiKey = config.dhis2.apiKey;
 let geojson = null;
 const fetch = require('node-fetch')
@@ -10,51 +11,60 @@ function Model(koop) { }
 // and format it into a geojson
 
 Model.prototype.getData = function (req, callback) {
-  async function fetchData(url) {
-    try {
-      const response = await fetch(url, {
-        "headers": {
-          "Authorization": apiKey,
-        },
-        "method": "GET"
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      const data = await response.json(); // Parse the response as JSON
-      return data; // Return the JSON data
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
 
+  fetch("http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures?ou=ou%3ALEVEL-2%3BImspTQPwCqd&displayProperty=NAME", {
+    "headers": {
+      "accept": "*/*",
+      "accept-language": "en-US,en;q=0.9,sw;q=0.8",
+      "cache-control": "no-cache",
+      "pragma": "no-cache",
+      "x-requested-with": "XMLHttpRequest"
+    },
+    "referrer": "http://dhis2-dev.aws.esri-ps.com/dhis-web-maps/index.html",
+    "referrerPolicy": "strict-origin-when-cross-origin",
+    "body": null,
+    "method": "GET",
+    "mode": "cors",
+    "credentials": "include"
+  });
   try {
-    console.log("Parms", req.params)
     const { host, id } = req.params;
+    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`
+    let dimUrl = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics.json?dimension=dx:Tt5TAvdfdVK&dimension=ou:ImspTQPwCqd;LEVEL-3&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`
 
-    //Provide the routes into the data
-    let url = `https://dhis2-dev.aws.esri-ps.com/api/39/organisationUnits.geojson?level=${host}`
-    let dimUrl = `https://dhis2-dev.aws.esri-ps.com/api/39/analytics.json?dimension=dx:${id}&dimension=ou:LEVEL-${host}&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`
-    
-    console.log(url,dimUrl, apiKey)
     fetch(url, {
       "headers": {
         "Authorization": apiKey,
       },
       "method": "GET"
-    }).then(async response => {
+    }).then(response => {
       if (response.status == 200) {
-        geojson = response.json()
-        geojson.metadata = { name: [host, '_in_', id].join('') }
-        console.log(geojson)
+        response.json().then(data => {
+          let geoData = data
+          console.log(data[0])
 
-        // Calling the async function and using the returned JSON
-        const jsonData = await fetchData(dimUrl);
-        console.log(jsonData); // Process the JSON data as needed
+          fetch(dimUrl, {
+            "headers": {
+              "Authorization": apiKey,
+            },
+            "method": "GET"
+          }).then(dimResponse => {
+            dimResponse.json().then(dimData => {
+              geoData.map((row, i) => {
+                dimData.rows.map((dimRow, i) => {
+                  if (row.id == dimRow[1])
+                    row.value = parseInt(dimRow[2])
+                })
+              })
 
-        callback(null, geojson);
+              geojson = parseGeoJSON(geoData)
+              geojson.metadata = { 'geometryType': 'Polygon', 'idField': 'id', "name": "ANCCoverage" }
+              geojson.ttl = 3600
+              console.log(geojson)
+              callback(null, geojson);
+            })
+          })
+        })
       } else {
         console.log(response.status)
         callback({ "error": "Error" })
