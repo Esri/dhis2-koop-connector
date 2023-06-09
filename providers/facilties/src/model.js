@@ -27,23 +27,6 @@ Model.prototype.getData = function (req, callback) {
         geojson.ttl = 3600
         console.log(geojson)
         callback(null, geojson);
-
-/*         fetch(dimURL, {
-          "headers": {
-            "Authorization": apiKey,
-          },
-          "method": "GET"
-        }).then(dimResponse => {
-          dimResponse.json().then(dimData => {
-            console.log(dimData)
-            geoData.map((row, i) => {
-              dimData.rows.map((dimRow, i) => {
-                if (row.id == dimRow[1])
-                  row.value = parseInt(dimRow[2])
-              })
-            })
-          })
-        }) */
       }).catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
         callback({ "error": "Error" })
