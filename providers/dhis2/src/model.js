@@ -11,22 +11,6 @@ function Model(koop) { }
 // and format it into a geojson
 
 Model.prototype.getData = function (req, callback) {
-
-  fetch("http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures?ou=ou%3ALEVEL-2%3BImspTQPwCqd&displayProperty=NAME", {
-    "headers": {
-      "accept": "*/*",
-      "accept-language": "en-US,en;q=0.9,sw;q=0.8",
-      "cache-control": "no-cache",
-      "pragma": "no-cache",
-      "x-requested-with": "XMLHttpRequest"
-    },
-    "referrer": "http://dhis2-dev.aws.esri-ps.com/dhis-web-maps/index.html",
-    "referrerPolicy": "strict-origin-when-cross-origin",
-    "body": null,
-    "method": "GET",
-    "mode": "cors",
-    "credentials": "include"
-  });
   try {
     const { host, id } = req.params;
     let url = `http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`
