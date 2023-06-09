@@ -3,7 +3,6 @@
 const config = require('../config/default.json')
 const parseGeoJSON = require('./parseGeoJson');
 const apiKey = config.dhis2.apiKey;
-let dhisFeatures = null;
 const fetch = require('node-fetch')
 
 function Model(koop) { }
@@ -14,23 +13,9 @@ Model.prototype.getData = function (req, callback) {
   try {
     console.log("Parms", req.query)
     const { host, id } = req.params;
+    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_12_MONTHS&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`
 
-    let offset = 0
-    let recordcount = 2000
-
-    if (req.query.hasOwnProperty('resultOffset'))
-      offset = parseInt(req.query.resultOffset)
-
-    if (req.query.hasOwnProperty('resultRecordCount'))
-      recordcount = req.query.resultRecordCount
-
-    let pageSize = 100000
-
-    //http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-01-01T01%3A00%3A00.000&endDate=2023-10-01T02%3A00%3A00.000&pageSize=100000
-    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=${pageSize}`
-
-    //if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
-    //  url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/count/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS`
+    //let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=100000`
 
     fetch(url, {
       "headers": {
@@ -40,10 +25,12 @@ Model.prototype.getData = function (req, callback) {
     }).then(response => {
       if (response.status == 200) {
         response.json().then(data => {
+          console.log(data.rows[0])
           geojson = parseGeoJSON(data)
+          console.log(geojson.features[0])
           geojson.metadata = { 'geometryType': 'Point', 'idField': 'id', "name": "MalariaCase" }
-          geojson.ttl = 60
-          if (req.query.hasOwnProperty('returnCountOnly'))
+          geojson.ttl = 3600
+          if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
             callback(null, { 'count': geojson.features.length })
           else
             callback(null, geojson)

@@ -8,9 +8,9 @@ module.exports = (input) => {
                     "id": i + 1,
                     "admin": row[11],
                     "casedate": row[2],
-                    "gender": row[16],
-                    "status": row[13],
-                    "age": parseInt(row[17])
+                    "gender": row[17],
+                    "status": row[14],
+                    "age": parseInt(row[18])
                 },
                 geometry: JSON.parse(row[8])
             }
