@@ -24,7 +24,12 @@ module.exports = function createModel ({ ProviderModel, koop, namespace }, optio
 
       try {
         const cached = await this.cacheRetrieve(key, req.query)
-        if (isFresh(cached)) return callback(null, cached)
+        if (isFresh(cached)) {
+          if (req.query.hasOwnProperty('returnCountOnly'))
+            return callback(null, {"count":cached.features.length})
+          else
+            return callback(null, cached)
+        }
       } catch (err) {
         if (process.env.KOOP_LOG_LEVEL === 'debug') {
           console.log(err)

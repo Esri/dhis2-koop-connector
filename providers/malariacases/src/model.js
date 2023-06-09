@@ -1,6 +1,9 @@
+
+
 const config = require('../config/default.json')
+const parseGeoJSON = require('./parseGeoJson');
 const apiKey = config.dhis2.apiKey;
-let geojson = null;
+let dhisFeatures = null;
 const fetch = require('node-fetch')
 
 function Model(koop) { }
@@ -8,48 +11,13 @@ function Model(koop) { }
 // Each model should have a getData() function to fetch the geo data
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
-  function convertToGeoJSON(input, start, end) {
-    console.log(input, start, end)
-    // define the basic structure of your GeoJSON
-    let geojson = {
-      "type": "FeatureCollection",
-      "features": []
-    };
-
-    let processRows = input.rows //.slice(start, start + end)
-
-    console.log(processRows[0])
-    // iterate over your rows
-    for (let [index, row] of processRows.entries()) {
-
-      // create a feature for each row
-      let feature = {
-        "type": "Feature",
-        "geometry": JSON.parse(row[8]),
-        "properties": {
-          "id": index,
-          "admin": row[11],  // assuming the 12th element is the oucode
-          "casedate": row[2],
-          "gender": row[16],  // assuming the 14th element is the eventstatus
-          "status": row[13],  // assuming the 14th element is the eventstatus
-          "age": parseInt(row[17])
-        }
-      };
-
-      // add the feature to your GeoJSON
-      geojson.features.push(feature);
-    }
-
-    return geojson;
-  }
-
   try {
     console.log("Parms", req.query)
     const { host, id } = req.params;
 
     let offset = 0
     let recordcount = 2000
-    
+
     if (req.query.hasOwnProperty('resultOffset'))
       offset = parseInt(req.query.resultOffset)
 
@@ -61,8 +29,8 @@ Model.prototype.getData = function (req, callback) {
     //http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&stage=pTo4uMt3xur&coordinatesOnly=true&startDate=2022-01-01T01%3A00%3A00.000&endDate=2023-10-01T02%3A00%3A00.000&pageSize=100000
     let url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS&coordinatesOnly=true&pageSize=${pageSize}`
 
-    if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
-      url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/count/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS`
+    //if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly)
+    //  url = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics/events/count/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=${id}&dimension=${host}&filter=pe:LAST_5_YEARS`
 
     fetch(url, {
       "headers": {
@@ -71,21 +39,19 @@ Model.prototype.getData = function (req, callback) {
       "method": "GET"
     }).then(response => {
       if (response.status == 200) {
-        geojson = response.json().then(data => {
-          // Now you can use your data
-          if (req.query.hasOwnProperty('returnCountOnly') && req.query.returnCountOnly) {
-            let output = { "count": data.count }
-            callback(null, output);
-          } else {
-            let output = convertToGeoJSON(data, offset, recordcount)
-            output.metadata = { 'geometryType': 'Point', 'idField': 'id' }
-            output.ttl = 600
-            callback(null, output);
-          }
-        })
-          .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-          });
+        response.json().then(data => {
+          geojson = parseGeoJSON(data)
+          geojson.metadata = { 'geometryType': 'Point', 'idField': 'id', "name": "MalariaCase" }
+          geojson.ttl = 60
+          if (req.query.hasOwnProperty('returnCountOnly'))
+            callback(null, { 'count': geojson.features.length })
+          else
+            callback(null, geojson)
+          //}
+        }).catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+          callback({ "error": "Error" })
+        });
       } else {
         console.log(response.status)
         callback({ "error": "Error" })
