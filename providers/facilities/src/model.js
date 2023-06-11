@@ -1,4 +1,5 @@
 const config = require('../config/default.json')
+const local = require('../config/local.json')
 const parseGeoJSON = require('./parseGeoJson');
 const apiKey = config.dhis2.apiKey;
 let geojson = null;
@@ -10,7 +11,6 @@ function Model (koop) {}
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
   let url = 'http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME'
-  let dimURL = 'http://dhis2-dev.aws.esri-ps.com/api/39/organisationUnitProfile/FLjwMPWLrL2/data?period=2023'
   fetch(url, {
     "headers": {
       "Authorization": apiKey,
@@ -32,8 +32,11 @@ Model.prototype.getData = function (req, callback) {
         callback({ "error": "Error" })
       });
     } else {
-      console.log(response.status)
-      callback({ "error": "Error" })
+      geojson = parseGeoJSON(local)
+      geojson.metadata = { 'geometryType': 'Point', 'idField': 'id', "name": "Facilities" }
+      geojson.ttl = 3600
+      console.log(geojson)
+      callback(null, geojson);
     }
   }).catch(e => {
     console.log("error in fetch", e)
