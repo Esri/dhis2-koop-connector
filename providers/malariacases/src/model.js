@@ -55,7 +55,7 @@ Model.prototype.getData = function (req, callback) {
             idField: "id",
             name: "MalariaCase",
           };
-          geojson.ttl = 3600;
+          geojson.ttl = 36000;
           if (
             req.query.hasOwnProperty("returnCountOnly") &&
             req.query.returnCountOnly
