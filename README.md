@@ -6,6 +6,7 @@ This repository contains a project that facilitates the integration of DHIS2 con
 
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
+  - [Obtain Access Token for DHIS2](#Obtaining a Personal Access Token (PAT))
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
