@@ -6,7 +6,7 @@ This repository contains a project that facilitates the integration of DHIS2 con
 
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
-  - [Obtain Access Token for DHIS2](#Obtaining a Personal Access Token (PAT))
+  - [Obtain Access Token for DHIS2](#obtaining-a-personal-access-token)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
@@ -20,7 +20,7 @@ This library will help users to create connection to the DHIS2 data to query dat
 
 ## Getting Started
 
-## Obtaining a Personal Access Token (PAT)
+## Obtaining a Personal Access Token
 
 To obtain a Personal Access Token (PAT) in DHIS2, you have two options:
 
