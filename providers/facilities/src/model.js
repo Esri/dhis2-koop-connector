@@ -1,5 +1,4 @@
-const config = require('../config/default.json')
-const local = require('../config/local.json')
+const config = require("../../../config/default.json");
 const parseGeoJSON = require('./parseGeoJson');
 const apiKey = config.dhis2.apiKey;
 let geojson = null;
@@ -10,7 +9,7 @@ function Model (koop) {}
 // Each model should have a getData() function to fetch the geo data
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
-  let url = 'http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME'
+  let url = `${config.dhis2.serverURL}/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME`
   fetch(url, {
     "headers": {
       "Authorization": apiKey,

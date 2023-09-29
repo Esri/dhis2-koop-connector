@@ -1,4 +1,7 @@
 {
     "appService.defaultWebAppToDeploy": "undefined/subscriptions/76cdcb3d-a101-4746-85f0-825370a4e29f/resourceGroups/ArcGIS/providers/Microsoft.Web/sites/dhis2connector",
-    "appService.deploySubpath": "."
+    "appService.deploySubpath": ".",
+    "cSpell.words": [
+        "dhis"
+    ]
 }

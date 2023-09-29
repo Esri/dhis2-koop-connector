@@ -1,6 +1,4 @@
-const config = require("../config/default.json");
-const local = require("../config/local.json");
-const localDim = require("../config/localDim.json");
+const config = require("../../../config/default.json");
 const parseGeoJSON = require("./parseGeoJson");
 const apiKey = config.dhis2.apiKey;
 let geojson = null;
@@ -15,8 +13,8 @@ function Model(koop) {}
 Model.prototype.getData = function (req, callback) {
   try {
     const { host, id } = req.params;
-    let url = `http://dhis2-dev.aws.esri-ps.com/api/39/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`;
-    let dimUrl = `http://dhis2-dev.aws.esri-ps.com/api/39/analytics.json?dimension=dx:Tt5TAvdfdVK&dimension=ou:ImspTQPwCqd;LEVEL-3&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`;
+    let url = `${config/dhis2.serverURL}/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`;
+    let dimUrl = `${config/dhis2.serverURL}/analytics.json?dimension=dx:Tt5TAvdfdVK&dimension=ou:ImspTQPwCqd;LEVEL-3&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`;
 
     fetch(url, {
       headers: {
