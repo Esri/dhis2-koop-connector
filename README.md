@@ -15,6 +15,7 @@ This repository contains a project that facilitates the integration of DHIS2 con
     - [Option B: Create a token via the API](#option-b-create-a-token-via-the-api)
     - [Prerequisites](#prerequisites)
     - [Installation Guide](#installation-guide)
+  - [Installing Koop](#installing-koop)
 
 ## Introduction
 
@@ -113,6 +114,23 @@ Follow these steps to install and run this project:
        "serverURL": "https://play.dhis2.org/40.1.0/api/40/"
      }
    }
+
+## Installing Koop
+
+Follow these steps to install Koop and create a new Koop project:
+
+1. **Install Koop**
+   Use the command `npm install -g koop` to install Koop globally.
+
+2. **Create a new Koop project**
+   Use the command `koop new app <my-app-name>` to create a new Koop project. Replace `<my-app-name>` with the name you want to give to your new Koop project.
+
+3. **Navigate into the new Koop project directory**
+   Use the command `cd <my-app-name>` to navigate into the new Koop project directory.
+
+4. **Install the dependencies**
+   Use the command `npm install` to install the necessary dependencies for the project.
+
 5. **Start the project **
    Use the command npm start or npm run start to start the project.
 
