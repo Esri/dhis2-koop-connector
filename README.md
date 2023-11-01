@@ -4,15 +4,17 @@ This repository contains a project that facilitates the integration of DHIS2 con
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-  - [Obtain Access Token for DHIS2](#obtaining-a-personal-access-token)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
+- [DHIS2 to ArcGIS Online Integration with Koop](#dhis2-to-arcgis-online-integration-with-koop)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+    - [Overview of Koop](#overview-of-koop)
+    - [DHIS2 (District Health Information Software 2)](#dhis2-district-health-information-software-2)
+  - [Getting Started](#getting-started)
+  - [Obtaining a Personal Access Token](#obtaining-a-personal-access-token)
+    - [Option A: Create a token in the DHIS2 UI](#option-a-create-a-token-in-the-dhis2-ui)
+    - [Option B: Create a token via the API](#option-b-create-a-token-via-the-api)
+    - [Prerequisites](#prerequisites)
+    - [Installation Guide](#installation-guide)
 
 ## Introduction
 
@@ -79,5 +81,38 @@ To obtain a Personal Access Token (PAT) in DHIS2, you have two options:
 
 ### Prerequisites
 
+Before you begin, ensure you have met the following requirements:
+
+- You have installed the latest version of [Node.js and npm](https://nodejs.org/).
+- You have installed [Git](https://git-scm.com/).
+- You have a `<Your Choice>` IDE or text editor. Some popular choices are [Visual Studio Code](https://code.visualstudio.com/), [Atom](https://atom.io/), or [Sublime Text](https://www.sublimetext.com/).
+
 List the prerequisites or dependencies required for running this integration.
+
+### Installation Guide
+
+Follow these steps to install and run this project:
+
+1. **Clone the repository**
+   Use the command `git clone <repository_url>` to clone the repository from GitHub. Replace `<repository_url>` with the actual URL of the repository.
+
+2. **Navigate into the project directory**
+   Use the command `cd <project_directory>` to navigate into the cloned repository. Replace `<project_directory>` with the actual directory name.
+
+3. **Install the dependencies**
+   Use the command `npm install` to install the necessary dependencies for the project.
+
+4. **Configure environment variables**
+   You may need to create a `.env` file or modify the existing one with the necessary environment variables. In this case, you might need to provide values for `port` and `dhis2` configuration. Here's an example of what your configuration might look like:
+
+   ```json
+   {
+     "port": 8080,
+     "dhis2": {
+       "apiKey": "ApiToken d2pat_zyvDHe31ahA2QZLN52txtFsufSJpx1vV0911556847",
+       "serverURL": "https://play.dhis2.org/40.1.0/api/40/"
+     }
+   }
+5. **Start the project **
+   Use the command npm start or npm run start to start the project.
 
