@@ -131,6 +131,6 @@ Follow these steps to install Koop and create a new Koop project:
 4. **Install the dependencies**
    Use the command `npm install` to install the necessary dependencies for the project.
 
-5. **Start the project **
+5. **Start the project**
    Use the command npm start or npm run start to start the project.
 
