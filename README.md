@@ -16,6 +16,8 @@ This repository contains a project that facilitates the integration of DHIS2 con
     - [Prerequisites](#prerequisites)
     - [Installation Guide](#installation-guide)
   - [Installing Koop](#installing-koop)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Introduction
 
