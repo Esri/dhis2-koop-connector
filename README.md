@@ -127,7 +127,11 @@ Follow these steps to install Koop and create a new Koop project:
 
 3. **Start the project**
    Use the command npm start or npm run start to start the project.
+   
+## Contributing 
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
+## License
 Apache License - 2.0
 
 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
@@ -229,6 +233,4 @@ to indemnify, defend, and hold each Contributor harmless for any liability incur
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-
-Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
