@@ -23,10 +23,10 @@ function Model(koop) {}
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
   try {
-    console.log("Parms", req.query);
+    console.log("Params", req.query);
     const { host, id } = req.params;
     let url = `${config.dhis2.serverURL}/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_MONTH&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`;
-
+    console.log("URL", url);
     fetch(url, {
       headers: {
         Authorization: apiKey,
@@ -34,6 +34,7 @@ Model.prototype.getData = function (req, callback) {
       method: "GET",
     })
       .then((response) => {
+        console.log("Response", response.status);
         if (response.status == 200) {
           response
             .json()
@@ -48,9 +49,14 @@ Model.prototype.getData = function (req, callback) {
               if (
                 req.query.hasOwnProperty("returnCountOnly") &&
                 req.query.returnCountOnly
-              )
+              ){
+                console.log("Count", geojson.features.length);
                 callback(null, { count: geojson.features.length });
-              else callback(null, geojson);
+              }
+              else {
+                console.log("Features", geojson.features);
+                callback(null, geojson);
+              }
             })
             .catch((error) => {
               console.error(
@@ -80,7 +86,7 @@ Model.prototype.getData = function (req, callback) {
         callback(e);
       });
   } catch (error) {
-    console.log(error);
+    console.log("Error Finale", error);
   }
 };
 
