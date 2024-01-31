@@ -25,8 +25,12 @@ Model.prototype.getData = function (req, callback) {
   try {
     console.log("Params", req.query);
     const { host, id } = req.params;
+    
+    //add token parameter to pass in the api key
     let url = `${config.dhis2.serverURL}/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_MONTH&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`;
     console.log("URL", url);
+
+    
     fetch(url, {
       headers: {
         Authorization: apiKey,
