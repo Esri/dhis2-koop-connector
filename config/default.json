@@ -1,7 +1,7 @@
 {
   "port": 8080,
   "dhis2": {
-    "apiKey": "ApiToken d2pat_RaDuupKK4WxrA3KI0ovXFQB0UvtwnDEW0572733941",
+    "apiKey": "ApiToken d2pat_s7Eiq2qQyExSYTDc8LVEKYauX1BRanLj1049700159",
     "serverURL": "https://play.dhis2.org/40.2.0/api/"
   }
 }
