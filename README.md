@@ -122,7 +122,7 @@ Follow these steps to install and run this project:
 Follow these steps to install Koop and create a new Koop project:
 
 1. **Install Koop**
-   Use the command `npm install -g koop` to install Koop globally.
+   Use the command `npm install -g @koopjs/cli` to install Koop globally.
 
 2. **Install the dependencies**
    Use the command `npm install` to install the necessary dependencies for the project.

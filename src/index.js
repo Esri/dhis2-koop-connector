@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 const config = require('config')
-const Koop = require('../framework/core')
+const Koop = require('@koopjs/koop-core')
 const routes = require('./routes')
 const plugins = require('./plugins')
 
