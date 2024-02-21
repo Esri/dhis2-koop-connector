@@ -12,22 +12,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module.exports = (input) => {
-    return {
-        type: 'FeatureCollection',
-        features: input.rows.map((row, i) => {
-            return {
-                type: 'Feature',
-                properties: {
-                    "id": i + 1,
-                    "admin": row[11],
-                    "casedate": row[2],
-                    "gender": row[18],
-                    "status": row[14],
-                    "age": parseInt(row[19])
-                },
-                geometry: JSON.parse(row[8])
-            }
-        })
-    };
+module.exports = (input, fieldInfo) => {
+  return {
+    type: "FeatureCollection",
+    features: input.rows.map((row, i) => {
+      const fieldProperties = row.reduce((acc, value, i) => {
+        if (
+          fieldInfo.geometryColumnIndex &&
+          i === fieldInfo.geometryColumnIndex
+        ) {
+          return acc;
+        }
+        const fieldConfig = fieldInfo.basePropsConfig[i];
+        if (fieldConfig.type === "Integer") {
+          value = parseInt(value);
+        }
+
+        acc[fieldInfo.basePropsConfig[i].name] = value;
+        return acc;
+      }, {});
+
+      return {
+        type: "Feature",
+        properties: {
+          id: i + 1,
+          ...fieldProperties,
+        },
+        geometry: JSON.parse(row[fieldInfo.geometryColumnIndex]),
+      };
+      //   return {
+      //     type: "Feature",
+      //     properties: {
+      //       id: i + 1,
+      //       admin: row[11],
+      //       casedate: row[2],
+      //       gender: row[17],
+      //       status: row[13],
+      //       age: parseInt(row[18]),
+      //     },
+      //     geometry: JSON.parse(row[8]),
+      //   };
+    }),
+  };
 };
