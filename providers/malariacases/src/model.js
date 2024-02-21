@@ -13,9 +13,20 @@
  * limitations under the License.
  */
 const config = require("../../../config/default.json");
+const getFields = require("../../../utils/getFields");
 const parseGeoJSON = require("./parseGeoJson");
 const apiKey = config.dhis2.apiKey;
 const fetch = require("node-fetch");
+
+const headerOverrides = {
+  F3ogKBuviRA: {
+    name: "householdlocation",
+    alias: "Household Location",
+    type: "TEXT",
+  },
+  oZg33kd9taw: { name: "gender", alias: "Gender", type: "TEXT" },
+  qrur9Dvnyt5: { name: "age", alias: "Age in Years", type: "INTEGER" },
+};
 
 function Model(koop) {}
 // A Model is a javascript function that encapsulates custom data access code.
@@ -39,21 +50,37 @@ Model.prototype.getData = function (req, callback) {
           response
             .json()
             .then((data) => {
-              geojson = parseGeoJSON(data);
+              fieldInfo = getFields(data.headers, headerOverrides);
+
+              geojson = parseGeoJSON(data, fieldInfo);
+
               geojson.metadata = {
                 geometryType: "Point",
                 idField: "id",
                 name: "MalariaCase",
               };
+
+              if (fieldInfo) {
+                geojson.metadata.fields = Object.keys(
+                  fieldInfo.basePropsConfig
+                ).map((key) => {
+                  return {
+                    name: fieldInfo.basePropsConfig[key].name,
+                    alias: fieldInfo.basePropsConfig[key].alias,
+                    type: fieldInfo.basePropsConfig[key].type,
+                  };
+                });
+              }
+
               geojson.ttl = 3600;
+
               if (
                 req.query.hasOwnProperty("returnCountOnly") &&
                 req.query.returnCountOnly
-              ){
+              ) {
                 console.log("Count", geojson.features.length);
                 callback(null, { count: geojson.features.length });
-              }
-              else {
+              } else {
                 console.log("Features", geojson.features);
                 callback(null, geojson);
               }
@@ -66,19 +93,19 @@ Model.prototype.getData = function (req, callback) {
               callback({ error: "Error" });
             });
         } else {
-          geojson = parseGeoJSON(local);
-          geojson.metadata = {
-            geometryType: "Point",
-            idField: "id",
-            name: "MalariaCase",
-          };
-          geojson.ttl = 36000;
-          if (
-            req.query.hasOwnProperty("returnCountOnly") &&
-            req.query.returnCountOnly
-          )
-            callback(null, { count: geojson.features.length });
-          else callback(null, geojson);
+          // geojson = parseGeoJSON(local);
+          // geojson.metadata = {
+          //   geometryType: "Point",
+          //   idField: "id",
+          //   name: "MalariaCase",
+          // };
+          // geojson.ttl = 36000;
+          // if (
+          //   req.query.hasOwnProperty("returnCountOnly") &&
+          //   req.query.returnCountOnly
+          // )
+          //   callback(null, { count: geojson.features.length });
+          // else callback(null, geojson);
         }
       })
       .catch((e) => {

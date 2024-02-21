@@ -12,22 +12,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module.exports = (input) => {
-    return {
-        type: 'FeatureCollection',
-        features: input.map((row, i) => {
-            return {
-                type: 'Feature',
-                properties: {
-                    "id": i + 1,
-                    "name": row.na,
-                    "admin": row.pn
-                },
-                geometry: {
-                    type: 'Point',
-                    coordinates: JSON.parse(row.co)
-                  }
-            }
-        })
-    };
+module.exports = (input, fieldInfo) => {
+  return {
+    type: "FeatureCollection",
+    features: input.map((row, i) => {
+      const fieldProperties = Object.keys(row).reduce((acc, value, i) => {
+        if (value === "dimensions" || value === "id") {
+          return acc;
+        }
+
+        if (
+          fieldInfo.geometryColumnIndex &&
+          i === fieldInfo.geometryColumnIndex
+        ) {
+          return acc;
+        }
+        const fieldConfig = fieldInfo.find((field) => field.name === value);
+        if (!fieldConfig) {
+          return acc;
+        }
+        if (fieldConfig.type === "Integer") {
+          value = parseInt(row[value]);
+        } else {
+          value = row[value];
+        }
+
+        acc[fieldConfig.name] = value;
+        return acc;
+      }, {});
+
+      return {
+        type: "Feature",
+        properties: {
+          id: i + 1,
+          ...fieldProperties,
+        },
+        geometry: { type: "Point", coordinates: JSON.parse(row.co) },
+      };
+      //   return {
+      //     type: "Feature",
+      //     properties: {
+      //       id: i + 1,
+      //       name: row.na,
+      //       admin: row.pn,
+      //     },
+      //     geometry: {
+      //       type: "Point",
+      //       coordinates: JSON.parse(row.co),
+      //     },
+      //   };
+    }),
+  };
 };
