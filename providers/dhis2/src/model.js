@@ -12,9 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const config = require("../../../config/default.json");
+// const config = require("../../../config/default.json");
 const parseGeoJSON = require("./parseGeoJson");
-const apiKey = config.dhis2.apiKey;
+require("dotenv").config();
+
+const apiKey = process.env.DHIS2_TOKEN;
+
 let geojson = null;
 const fetch = require("node-fetch");
 
@@ -27,8 +30,8 @@ function Model(koop) {}
 Model.prototype.getData = function (req, callback) {
   try {
     const { host, id } = req.params;
-    let url = `${config/dhis2.serverURL}/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`;
-    let dimUrl = `${config/dhis2.serverURL}/analytics.json?dimension=dx:Tt5TAvdfdVK&dimension=ou:ImspTQPwCqd;LEVEL-3&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`;
+    let url = `${process.env.DHIS2_SERVER}/geoFeatures.geojson?ou=ou%3ALEVEL-3%3BImspTQPwCqd&displayProperty=NAME`;
+    let dimUrl = `${process.env.DHIS2_SERVER}/analytics.json?dimension=dx:Tt5TAvdfdVK&dimension=ou:ImspTQPwCqd;LEVEL-3&filter=pe:LAST_12_MONTHS&displayProperty=NAME&skipData=false&skipMeta=true`;
 
     fetch(url, {
       headers: {
