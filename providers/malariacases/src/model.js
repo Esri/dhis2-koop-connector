@@ -12,10 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const config = require("../../../config/default.json");
+// const config = require("../../../config/default.json");
 const getFields = require("../../../utils/getFields");
 const parseGeoJSON = require("./parseGeoJson");
-const apiKey = config.dhis2.apiKey;
+require("dotenv").config();
+
+const apiKey = process.env.DHIS2_TOKEN;
+
+console.log("hi", apiKey);
 const fetch = require("node-fetch");
 
 const headerOverrides = {
@@ -36,7 +40,7 @@ Model.prototype.getData = function (req, callback) {
   try {
     console.log("Params", req.query);
     const { host, id } = req.params;
-    let url = `${config.dhis2.serverURL}/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_MONTH&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`;
+    let url = `${process.env.DHIS2_SERVER}/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_MONTH&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`;
     console.log("URL", url);
     fetch(url, {
       headers: {

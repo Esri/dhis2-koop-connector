@@ -12,9 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const config = require("../../../config/default.json");
+// const config = require("../../../config/default.json");
 const parseGeoJSON = require("./parseGeoJson");
-const apiKey = config.dhis2.apiKey;
+require("dotenv").config();
+const apiKey = process.env.DHIS2_TOKEN;
 let geojson = null;
 const fetch = require("node-fetch");
 function Model(koop) {}
@@ -23,7 +24,7 @@ function Model(koop) {}
 // Each model should have a getData() function to fetch the geo data
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
-  let url = `${config.dhis2.serverURL}/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME`;
+  let url = `${process.env.DHIS2_SERVER}/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME`;
   fetch(url, {
     headers: {
       Authorization: apiKey,
