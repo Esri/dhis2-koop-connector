@@ -8,7 +8,9 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "@koopjs/koop-core": "^10.3.1",
     "config": "^3.2.4",
+    "dotenv": "^16.4.5",
     "fs-extra": "^9.0.1",
     "klaw-sync": "^6.0.0",
     "node-fetch": "^2.6.0"

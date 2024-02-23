@@ -3,3 +3,6 @@ node_modules
 framework
 
 .DS_Store
+
+.env
+web.config

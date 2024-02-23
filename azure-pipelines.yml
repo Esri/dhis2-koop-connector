@@ -1,0 +1,23 @@
+# Node.js
+
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Visual Studio Enterprise Subscription(76cdcb3d-a101-4746-85f0-825370a4e29f)'
+    appType: 'webAppLinux'
+    WebAppName: 'dhis2connector'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'NODE|18-lts'
+    StartupCommand: 'npm start'
+    ScriptType: 'Inline Script'
+    InlineScript: ':: You can provide your deployment commands here. One command per line.'
