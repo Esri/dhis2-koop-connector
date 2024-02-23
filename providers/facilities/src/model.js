@@ -106,7 +106,7 @@ Model.prototype.getData = function (req, callback) {
               name: "Facilities",
               fields: baseFields,
             };
-            geojson.ttl = 3600;
+            //geojson.ttl = 3600;
             console.log(geojson);
             callback(null, geojson);
           })
@@ -124,7 +124,7 @@ Model.prototype.getData = function (req, callback) {
           idField: "id",
           name: "Facilities",
         };
-        geojson.ttl = 3600;
+        //geojson.ttl = 3600;
         console.log(geojson);
         callback(null, geojson);
       }
