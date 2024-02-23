@@ -1,7 +1,7 @@
 {
   "name": "dhis2",
   "version": "11.1.0",
-  "description": "Template for customdata app",
+  "description": "DHIS2 Connector for ArcGIS",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha 'test/**/*.test.js'",
