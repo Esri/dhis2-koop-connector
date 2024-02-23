@@ -78,7 +78,7 @@ Model.prototype.getData = function (req, callback) {
                 });
               }
 
-              geojson.ttl = 3600;
+              //geojson.ttl = 3600;
 
               if (
                 req.query.hasOwnProperty("returnCountOnly") &&
