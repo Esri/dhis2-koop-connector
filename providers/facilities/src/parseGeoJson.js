@@ -34,7 +34,7 @@ module.exports = (input, fieldInfo) => {
         if (fieldConfig.type === "Integer") {
           value = parseInt(row[value]);
         } else {
-          value = row[value];
+          value = row[value].toString();
         }
 
         acc[fieldConfig.name] = value;
