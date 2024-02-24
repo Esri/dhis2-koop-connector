@@ -10,14 +10,14 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Visual Studio Enterprise Subscription(76cdcb3d-a101-4746-85f0-825370a4e29f)'
-    appType: 'webAppLinux'
-    WebAppName: 'dhis2connector'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    RuntimeStack: 'NODE|18-lts'
-    StartupCommand: 'npm start'
-    ScriptType: 'Inline Script'
-    InlineScript: ':: You can provide your deployment commands here. One command per line.'
+  - task: AzureRmWebAppDeployment@4
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Visual Studio Enterprise Subscription(76cdcb3d-a101-4746-85f0-825370a4e29f)'
+      appType: 'webAppLinux'
+      WebAppName: 'dhis2connector'
+      packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+      RuntimeStack: 'NODE|18-lts'
+      StartupCommand: 'npm start'
+      ScriptType: 'Inline Script'
+      InlineScript: ':: You can provide your deployment commands here. One command per line.'
