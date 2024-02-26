@@ -28,6 +28,10 @@ module.exports = (input, fieldInfo) => {
           value = parseInt(value);
         }
 
+        if (fieldConfig.type === "String") {
+          value = value ? value.toString() : '';
+        }
+
         acc[fieldInfo.basePropsConfig[i].name] = value;
         return acc;
       }, {});
