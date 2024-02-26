@@ -30,6 +30,7 @@ const headerOverrides = {
   },
   oZg33kd9taw: { name: "gender", alias: "Gender", type: "TEXT" },
   qrur9Dvnyt5: { name: "age", alias: "Age in Years", type: "INTEGER" },
+  scheduleddate : { name: "scheduleddate", alias: "Scheduled Date", type: "TEXT" }
 };
 
 function Model(koop) {}
@@ -43,7 +44,6 @@ Model.prototype.getData = function (req, callback) {
     let url = `${process.env.DHIS2_SERVER}/analytics/events/query/VBqh0ynB2wv.json?dimension=ou:ImspTQPwCqd&dimension=F3ogKBuviRA&dimension=${id}&dimension=${host}&filter=pe:LAST_MONTH&stage=pTo4uMt3xur&coordinatesOnly=true&coordinateField=F3ogKBuviRA&eventStatus=ACTIVE&pageSize=110000`;
     console.log("URL", url);
 
-    
     fetch(url, {
       headers: {
         Authorization: apiKey,
