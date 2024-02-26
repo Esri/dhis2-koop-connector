@@ -24,11 +24,11 @@ module.exports = (input, fieldInfo) => {
           return acc;
         }
         const fieldConfig = fieldInfo.basePropsConfig[i];
-        if (fieldConfig.type === "Integer") {
+        if (fieldConfig.type === "INTEGER") {
           value = parseInt(value);
         }
 
-        if (fieldConfig.type === "String") {
+        if (fieldConfig.type === "TEXT") {
           value = value ? value.toString() : '';
         }
 
