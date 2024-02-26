@@ -12,10 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const finalFields = ["OBJECTID", "gender", "age", "ouname","oucode"];
+
 module.exports = (input, fieldInfo) => {
   return {
     type: "FeatureCollection",
-    features: input.rows.map((row, i) => {
+    features: 
+    input.rows.map((row, i) => {
+      console.log("Row", row);
+      return {
+            type: "Feature",
+            properties: {
+              OBJECTID: i + 1,
+              admin: row[11],
+              casedate: row[2],
+              gender: row[18],
+              age: parseInt(row[19]),
+            },
+            geometry: JSON.parse(row[8]),
+          };
+      /*
+      console.log("Row", fieldInfo);
       const fieldProperties = row.reduce((acc, value, i) => {
         if (
           fieldInfo.geometryColumnIndex &&
@@ -24,26 +41,27 @@ module.exports = (input, fieldInfo) => {
           return acc;
         }
         const fieldConfig = fieldInfo.basePropsConfig[i];
-        if (fieldConfig.type === "INTEGER") {
+        console.log("Field Config", fieldConfig);
+        if (fieldConfig.type === "Integer") {
           value = parseInt(value);
         }
 
-        if (fieldConfig.type === "TEXT") {
+        if (fieldConfig.type === "String") {
           value = value ? value.toString() : '';
         }
 
-        acc[fieldInfo.basePropsConfig[i].name] = value;
+        acc[fieldInfo[i].name] = value;
         return acc;
       }, {});
-
-      console.log("Field Properties", fieldProperties[0]);
+      
       return {
         type: "Feature",
         properties: {
-          id: i + 1
+          OBJECTID: i + 1,
+          ...fieldProperties
         },
         geometry: JSON.parse(row[fieldInfo.geometryColumnIndex]),
-      };
+      }; */
       //   return {
       //     type: "Feature",
       //     properties: {

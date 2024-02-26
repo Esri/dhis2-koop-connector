@@ -28,9 +28,11 @@ const headerOverrides = {
     type: "TEXT",
   },
   oZg33kd9taw: { name: "gender", alias: "Gender", type: "TEXT" },
-  qrur9Dvnyt5: { name: "age", alias: "Age in Years", type: "INTEGER" },
-  scheduleddate : { name: "scheduleddate", alias: "Scheduled Date", type: "TEXT" }
+  qrur9Dvnyt5: { name: "age", alias: "Age in Years", type: "INTEGER" }
 };
+
+const finalFields = ["OBJECTID", "gender", "age", "ouname","oucode", "oZg33kd9taw","qrur9Dvnyt5","geometry"];
+
 
 function Model(koop) {}
 // A Model is a javascript function that encapsulates custom data access code.
@@ -54,30 +56,45 @@ Model.prototype.getData = function (req, callback) {
             .then((data) => {
               fieldInfo = getFields(data.headers, headerOverrides);
 
-              geojson = parseGeoJSON(data, fieldInfo);
+              console.log("Field Info", fieldInfo);
+              let filteredPropsConfig = Object.keys(fieldInfo.basePropsConfig)
+              .filter(key => finalFields.includes(fieldInfo.basePropsConfig[key].name))
+              .reduce((obj, key) => {
+                obj[key] = fieldInfo.basePropsConfig[key];
+                return obj;
+              }, {});
+
+              let sequentialPropsConfig = Object.values(filteredPropsConfig).reduce((obj, value, index) => {
+                obj[index] = value;
+                return obj;
+              }, {});
+              console.log("Filtered Props Config", sequentialPropsConfig);
+              let basePropsConfig = {"basePropsConfig": sequentialPropsConfig}
+              geojson = parseGeoJSON(
+                data,
+                basePropsConfig
+              );
 
               geojson.metadata = {
                 geometryType: "Point",
-                idField: "id",
+                idField: "OBJECTID",
                 name: "MalariaCase",
               };
 
-              if (fieldInfo) {
-                geojson.metadata.fields = Object.keys(
-                  fieldInfo.basePropsConfig
-                ).map((key) => {
-                  return {
-                    name: fieldInfo.basePropsConfig[key].name,
-                    alias: fieldInfo.basePropsConfig[key].alias,
-                    type: fieldInfo.basePropsConfig[key].type,
-                  };
-                });
-              }
-
+              /*if (fieldInfo) {
+                geojson.metadata.fields = Object.keys(sequentialPropsConfig.basePropsConfig)
+                  .map((key) => {
+                    return {
+                      name: sequentialPropsConfig.basePropsConfig[key].name,
+                      alias: sequentialPropsConfig.basePropsConfig[key].alias,
+                      type: sequentialPropsConfig.basePropsConfig[key].type,
+                    };
+                  });
+              }*/
               geojson.ttl = 3600;
               //callback(null, geojson);
 
-             if (
+              if (
                 req.query.hasOwnProperty("returnCountOnly") &&
                 req.query.returnCountOnly
               ) {
