@@ -78,9 +78,10 @@ Model.prototype.getData = function (req, callback) {
                 });
               }
 
-              //geojson.ttl = 3600;
+              geojson.ttl = 3600;
+              callback(null, geojson);
 
-              if (
+ /*              if (
                 req.query.hasOwnProperty("returnCountOnly") &&
                 req.query.returnCountOnly
               ) {
@@ -89,7 +90,7 @@ Model.prototype.getData = function (req, callback) {
               } else {
                 console.log("Features", geojson.features);
                 callback(null, geojson);
-              }
+              } */
             })
             .catch((error) => {
               console.error(
