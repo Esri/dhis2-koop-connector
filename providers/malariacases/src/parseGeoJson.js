@@ -36,11 +36,11 @@ module.exports = (input, fieldInfo) => {
         return acc;
       }, {});
 
+      console.log("Field Properties", fieldProperties[0]);
       return {
         type: "Feature",
         properties: {
-          id: i + 1,
-          ...fieldProperties,
+          id: i + 1
         },
         geometry: JSON.parse(row[fieldInfo.geometryColumnIndex]),
       };
