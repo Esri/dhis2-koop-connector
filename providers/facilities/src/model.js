@@ -24,7 +24,7 @@ function Model(koop) {}
 // Each model should have a getData() function to fetch the geo data
 // and format it into a geojson
 Model.prototype.getData = function (req, callback) {
-  let url = `${process.env.DHIS2_SERVER}/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME`;
+  let url = `${process.env.DHIS2_SERVER}/39/geoFeatures.json?includeGroupSets=false&ou=ou%3AImspTQPwCqd%3BLEVEL-m9lBJogzE95&displayProperty=NAME&ty=1`;
   fetch(url, {
     headers: {
       Authorization: apiKey,
@@ -36,7 +36,6 @@ Model.prototype.getData = function (req, callback) {
         response
           .json()
           .then((data) => {
-            console.log(data[0]);
             let baseFields = [
               {
                 name: "id",
@@ -105,9 +104,10 @@ Model.prototype.getData = function (req, callback) {
               idField: "id",
               name: "Facilities",
               fields: baseFields,
+              supportedQueryFormats: 'JSON'
             };
-            //geojson.ttl = 3600;
-            console.log(geojson);
+
+            geojson.ttl = 3600;
             callback(null, geojson);
           })
           .catch((error) => {
