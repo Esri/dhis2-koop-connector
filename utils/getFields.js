@@ -18,7 +18,7 @@ module.exports = (headers, overrides) => {
 
   let basePropsConfig = headers.reduce((acc, header, i) => {
     if (header.name === "geometry") {
-      geometryColumnIndex = 0;
+      geometryColumnIndex = i;
     }
 
     if (overrides[header.name]) {

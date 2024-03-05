@@ -31,9 +31,6 @@ const headerOverrides = {
   qrur9Dvnyt5: { name: "age", alias: "Age in Years", type: "INTEGER" }
 };
 
-const finalFields = ["OBJECTID", "gender", "age", "ouname","oucode", "oZg33kd9taw","qrur9Dvnyt5","geometry"];
-
-
 function Model(koop) {}
 // A Model is a javascript function that encapsulates custom data access code.
 // Each model should have a getData() function to fetch the geo data
@@ -55,44 +52,28 @@ Model.prototype.getData = function (req, callback) {
             .json()
             .then((data) => {
               fieldInfo = getFields(data.headers, headerOverrides);
-
-              console.log("Field Info", fieldInfo);
-              let filteredPropsConfig = Object.keys(fieldInfo.basePropsConfig)
-              .filter(key => finalFields.includes(fieldInfo.basePropsConfig[key].name))
-              .reduce((obj, key) => {
-                obj[key] = fieldInfo.basePropsConfig[key];
-                return obj;
-              }, {});
-
-              let sequentialPropsConfig = Object.values(filteredPropsConfig).reduce((obj, value, index) => {
-                obj[index] = value;
-                return obj;
-              }, {});
-              console.log("Filtered Props Config", sequentialPropsConfig);
-              let basePropsConfig = {"basePropsConfig": sequentialPropsConfig}
+              console.log("fieldInfo", fieldInfo);
               geojson = parseGeoJSON(
                 data,
-                basePropsConfig
+                fieldInfo
               );
-
               geojson.metadata = {
                 geometryType: "Point",
                 idField: "OBJECTID",
                 name: "MalariaCase",
               };
 
-              /*if (fieldInfo) {
-                geojson.metadata.fields = Object.keys(sequentialPropsConfig.basePropsConfig)
+              if (fieldInfo) {
+                geojson.metadata.fields = Object.keys(fieldInfo.basePropsConfig)
                   .map((key) => {
                     return {
-                      name: sequentialPropsConfig.basePropsConfig[key].name,
-                      alias: sequentialPropsConfig.basePropsConfig[key].alias,
-                      type: sequentialPropsConfig.basePropsConfig[key].type,
+                      name: fieldInfo.basePropsConfig[key].name,
+                      alias: fieldInfo.basePropsConfig[key].alias,
+                      type: fieldInfo.basePropsConfig[key].type,
                     };
                   });
-              }*/
+              }
               geojson.ttl = 3600;
-              //callback(null, geojson);
 
               if (
                 req.query.hasOwnProperty("returnCountOnly") &&
