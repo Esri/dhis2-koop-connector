@@ -51,6 +51,7 @@ Model.prototype.getData = function (req, callback) {
           response
             .json()
             .then((data) => {
+              console.log(data['rows'])
               fieldInfo = getFields(data.headers, headerOverrides);
               console.log("fieldInfo", fieldInfo);
               geojson = parseGeoJSON(
@@ -61,6 +62,7 @@ Model.prototype.getData = function (req, callback) {
                 geometryType: "Point",
                 idField: "OBJECTID",
                 name: "MalariaCase",
+                supportedQueryFormats: 'JSON'
               };
 
               if (fieldInfo) {

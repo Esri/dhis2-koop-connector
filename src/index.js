@@ -20,7 +20,7 @@ const plugins = require("./plugins");
 // require("dotenv").config();
 
 // initiate a koop app
-const koop = new Koop();
+const koop = new Koop({ logLevel: 'debug' });
 
 // register koop plugins
 plugins.forEach((plugin) => {
